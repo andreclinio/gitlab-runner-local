@@ -1,0 +1,51 @@
+#!/bin/bash
+
+## -------------------------------------
+## Change this section for configuration
+## -------------------------------------
+
+dnsAddr='172.30.2.2'
+dnsSearch='tecgraf.puc-rio.br'
+gitAddr='git.tecgraf.puc-rio.br'
+
+## -------------------------------------
+## Do not change below!
+## -------------------------------------
+
+hostName=`hostname -s`
+
+runnerName=$1
+until [ "$runnerName" != "" ]; do
+   read -p "Enter runner's name (no default): " runnerName
+done
+
+token=$2
+until [ "$token" != "" ]; do
+   read -p "Enter project/group token (no default): " token
+done
+
+echo ">>> DNS: $dnsAddr..."
+echo ">>> Git server: $gitAddr..."
+echo ">>> Runner $runnerName ($hostname) with token $token..."
+
+gitlab-runner register \
+--non-interactive \
+--executor "docker" \
+--url "https://$gitAddr/" \
+--registration-token "$token" \
+--description "$runnerName" \
+--tag-list "docker-executor, $hostName, $runnerName" \
+--run-untagged \
+--locked="false" \
+--docker-image "docker:stable" \
+--docker-privileged \
+--docker-dns $dnsAddr \
+--docker-dns-search $dnsSearch \
+--docker-volumes /var/run/docker.sock:/var/run/docker.sock
+
+retVal=$?
+if [ $retVal -ne 0 ]; then
+     echo "!!! Register failed (${runnerName})"
+     exit $retVal
+fi
+
