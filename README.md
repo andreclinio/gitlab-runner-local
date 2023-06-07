@@ -1,6 +1,6 @@
 # Introduction
 
-# `gitlab-runner` Install
+# Gitlab-runner install
 
 # Usage
 
@@ -9,7 +9,7 @@
 $ sudo ./register my-runner-name my-token
 ```
 
-## `gitlab-runner` usefull commands
+## gitlab-runner usefull commands
 ```
 $ sudo gitlab-runner list
 $ sudo gitlab-runner unregister --all-runners
