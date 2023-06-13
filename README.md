@@ -14,4 +14,5 @@ $ sudo ./register my-runner-name my-token
 $ sudo gitlab-runner list
 $ sudo gitlab-runner unregister --all-runners
 $ sudo gitlab-runner unregister --name my-runner-name
+$ sudo gitlab-runner verify --delete
 ```
