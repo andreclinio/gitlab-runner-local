@@ -2,6 +2,14 @@
 
 # Gitlab-runner install
 
+[https://docs.gitlab.com/runner/install/linux-repository.html]
+
+For Ubuntu, run:
+```
+$ curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
+
+```
+
 # Usage
 
 ## Shell usage
