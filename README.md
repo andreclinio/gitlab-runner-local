@@ -1,8 +1,21 @@
 # Introduction
 
+## Requirements
+
+First, check if the following packages are installed.
+* Bash Shell
+* Git
+* Gitlab-Runner (see instructions below)
+
+Then, create a special "sudoer" user to have a home directory. 
+Use this place to clone this repository and run any scripts. 
+At this user's HOME, you can put any other needed files.
+
 # Gitlab-runner install
 
-[https://docs.gitlab.com/runner/install/linux-repository.html]
+## Unix
+To see updated documentation, check this 
+[site](https://docs.gitlab.com/runner/install/linux-repository.html).
 
 For Ubuntu, run:
 ```
@@ -12,7 +25,7 @@ $ sudo apt-get install gitlab-runner
 
 # Usage
 
-## Shell usage
+## Register shell script usage
 ```
 $ sudo ./register my-runner-name my-token
 ```
