@@ -36,7 +36,7 @@ gitlab-runner register \
 --description "$runnerName" \
 --tag-list "docker-executor, $hostName, $runnerName" \
 --run-untagged \
---locked="false" \
+--locked="true" \
 --docker-image "docker:stable" \
 --docker-privileged \
 --docker-dns $dnsAddr \
