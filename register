@@ -13,11 +13,13 @@ gitAddr='git.tecgraf.puc-rio.br'
 ## -------------------------------------
 
 hostName=`hostname -s`
+domainName=`hostname -d`
 
 runnerName=$1
 until [ "$runnerName" != "" ]; do
    read -p "Enter runner's name (no default): " runnerName
 done
+runnerName="$runnerName - $hostName"
 
 token=$2
 until [ "$token" != "" ]; do
@@ -26,15 +28,17 @@ done
 
 echo ">>> DNS: $dnsAddr..."
 echo ">>> Git server: $gitAddr..."
-echo ">>> Runner $runnerName ($hostname) with token $token..."
+echo ">>> Runner $runnerName ($runnerDescription) at $hostname.$domainName with token $token..."
+
+# Nowadays, we cannot set both names and description! :( 
 
 gitlab-runner register \
 --non-interactive \
 --executor "docker" \
 --url "https://$gitAddr/" \
 --registration-token "$token" \
---description "$runnerName" \
---tag-list "docker-executor, $hostName, $runnerName" \
+--name "$runnerName" \
+--tag-list "gitlab-runner-local, gitlab-runner-docker, $hostName, $runnerName, $domainName" \
 --run-untagged \
 --locked="true" \
 --docker-image "docker:stable" \
