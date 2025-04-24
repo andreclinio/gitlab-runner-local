@@ -27,7 +27,7 @@ $ sudo apt-get install gitlab-runner
 
 ## Register shell script usage
 ```
-$ sudo ./register my-runner-name my-token
+$ sudo ./register [--docker|--local] --name <my-runner-name> --token <my-token>
 ```
 
 ## gitlab-runner usefull commands

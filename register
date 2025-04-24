@@ -15,13 +15,43 @@ gitAddr='git.tecgraf.puc-rio.br'
 hostName=`hostname -s`
 domainName=`hostname -d`
 
-runnerName=$1
+# Default executor (docker)
+executor="shell"
+
+# Parse command-line arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --docker)
+      executor="docker"
+      echo ">>> Runner mode: $executor..."
+      shift
+      ;;
+    --shell|--local)
+      executor="shell"
+      echo ">>> Runner mode: $executor..."
+      shift
+      ;;
+    --name)
+      shift
+      runnerName="$1"
+      echo ">>> Runner name: $runnerName..."
+      shift
+      ;;
+    --token)
+      shift
+      token="$1"
+      echo ">>> Runner token: $token..."
+      shift
+      ;;
+  esac
+done
+
+
 until [ "$runnerName" != "" ]; do
    read -p "Enter runner's name (no default): " runnerName
 done
 runnerName="$runnerName - $hostName"
 
-token=$2
 until [ "$token" != "" ]; do
    read -p "Enter project/group token (no default): " token
 done
@@ -32,21 +62,33 @@ echo ">>> Runner $runnerName ($runnerDescription) at $hostname.$domainName with 
 
 # Nowadays, we cannot set both names and description! :( 
 
-gitlab-runner register \
---non-interactive \
---executor "docker" \
---url "https://$gitAddr/" \
---registration-token "$token" \
---name "$runnerName" \
---tag-list "gitlab-runner-local, gitlab-runner-docker, $hostName, $runnerName, $domainName" \
---run-untagged \
---locked="true" \
---docker-image "docker:stable" \
---docker-privileged \
---docker-dns $dnsAddr \
---docker-dns-search $dnsSearch \
---docker-volumes /var/run/docker.sock:/var/run/docker.sock \
---docker-services-limit "10"
+if [[ "$executor" == "docker" ]]; then
+   gitlab-runner register \
+      --non-interactive \
+      --executor "docker" \
+      --url "https://$gitAddr/" \
+      --registration-token "$token" \
+      --name "$runnerName" \
+      --tag-list "gitlab-runner-local, gitlab-runner-docker, $hostName, $runnerName, $domainName" \
+      --run-untagged \
+      --locked="true" \
+      --docker-image "docker:stable" \
+      --docker-privileged \
+      --docker-dns $dnsAddr \
+      --docker-dns-search $dnsSearch \
+      --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+      --docker-services-limit "10"
+else 
+  gitlab-runner register \
+    --non-interactive \
+    --executor "shell" \
+    --url "https://$gitAddr/" \
+    --registration-token "$token" \
+    --name "$runnerName" \
+    --tag-list "gitlab-runner-local, gitlab-runner-shell, $hostName, $runnerName, $domainName" \
+    --run-untagged \
+    --locked="true"
+fi
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
