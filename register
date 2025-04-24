@@ -45,7 +45,8 @@ gitlab-runner register \
 --docker-privileged \
 --docker-dns $dnsAddr \
 --docker-dns-search $dnsSearch \
---docker-volumes /var/run/docker.sock:/var/run/docker.sock
+--docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+--docker-services-limit "10"
 
 retVal=$?
 if [ $retVal -ne 0 ]; then
