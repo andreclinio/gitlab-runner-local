@@ -67,11 +67,8 @@ if [[ "$executor" == "docker" ]]; then
       --non-interactive \
       --executor "docker" \
       --url "https://$gitAddr/" \
-      --registration-token "$token" \
+      --token "$token" \
       --name "$runnerName" \
-      --tag-list "gitlab-runner-docker, $hostName, $runnerName, $domainName" \
-      --run-untagged \
-      --locked="true" \
       --docker-image "docker:stable" \
       --docker-privileged \
       --docker-dns $dnsAddr \
@@ -83,11 +80,8 @@ else
     --non-interactive \
     --executor "shell" \
     --url "https://$gitAddr/" \
-    --registration-token "$token" \
-    --name "$runnerName" \
-    --tag-list "gitlab-runner-shell, $hostName, $runnerName, $domainName" \
-    --run-untagged \
-    --locked="true"
+    --token "$token" \
+    --name "$runnerName" 
 fi
 
 retVal=$?
